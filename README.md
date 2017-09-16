@@ -1,10 +1,10 @@
-# jsonque
+# jque
 
 Query JSON in memory as though it were a Mongo database.
 
 
 ```python
-data = jsonque.jsonque([{
+data = jque.jque([{
     "_id": "ABC",
     "name": "Arthur Dent",
     "age": 42,
@@ -26,3 +26,12 @@ teenage_earthlings = data.query({
     "age": { "$lte": 20, "$gte": 10 }
 })
 ```
+
+
+Use Python lambdas as a filter:
+
+```python
+libraries = jque.jque([{"name": "jque", "language": "Python"}, {"name": "react", "language": "node"}])
+list(libraries.query({ 'language': lambda x: x[:2] == "Py" }))
+```
+

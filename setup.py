@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 from codecs import open
 from os import path
-from jsonque import __version__
+from jque import __version__
 
 # to update
 # python setup.py sdist
@@ -24,11 +24,11 @@ dependency_links = [
 ]
 
 setup(
-    name='jsonque',
+    name='jque',
     version=__version__,
     description='Query JSON in memory as though it were a Mongo database.',
     long_description=long_description,
-    download_url='https://github.com/j6k4m8/jsonque/tarball/' + __version__,
+    download_url='https://github.com/j6k4m8/jque/tarball/' + __version__,
     license='Apache 2.0',
     classifiers=[
       'Development Status :: 4 - Beta',
