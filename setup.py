@@ -3,10 +3,6 @@ from codecs import open
 from os import path
 from jque import __version__
 
-# to update
-# python setup.py sdist
-# python setup.py bdist_wheel
-# twine upload dist/*
 
 here = path.abspath(path.dirname(__file__))
 
