@@ -13,7 +13,7 @@ import jque
 
 Pass a list of dicts:
 ```python
-data = jque.jque({ "name": "jque" })
+data = jque.jque([{ "name": "jque" }])
 ```
 
 Pass a JSON filename:
