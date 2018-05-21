@@ -80,3 +80,23 @@ class TestJque(unittest.TestCase):
             len(jque.jque(USERS).data)
         )
 
+    def test_list_in(self):
+        self.assertEquals(
+            len(jque.jque(USERS).query({
+                "id": {
+                    "$in": [9, 109]
+                }
+            })),
+            2
+        )
+
+    def test_list_nin(self):
+        self.assertEquals(
+            len(jque.jque(USERS).query({
+                "id": {
+                    "$nin": [9, 109]
+                }
+            })),
+            len(jque.jque(USERS)) - 2
+        )
+

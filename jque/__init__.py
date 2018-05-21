@@ -21,8 +21,8 @@ _OPERATORS = {
     "$lte": lambda x, y: x <= y,
     "$gt": lambda x, y: x > y,
     "$gte": lambda x, y: x >= y,
-    "$in": lambda x, y: y in x,
-    "$nin": lambda x, y: y not in x,
+    "$in": lambda x, y: x in y,
+    "$nin": lambda x, y: x not in y,
 }
 
 
