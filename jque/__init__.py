@@ -88,7 +88,7 @@ class jque:
         if isinstance(data, str):
             try:
                 data = json.loads(data)
-            except json.JSONDecodeError:
+            except ValueError:
                 data = json.loads(open(data, 'r').read())
         elif not isinstance(data, list):
             raise ValueError("'data' argument must be a string or a list.")
