@@ -73,3 +73,10 @@ class TestJque(unittest.TestCase):
             len(jque.jque(USERS))
         )
 
+
+    def test_accepts_filename(self):
+        self.assertEquals(
+            len(jque.jque(os.path.dirname(__file__) + "/data/users.json").data),
+            len(jque.jque(USERS).data)
+        )
+
