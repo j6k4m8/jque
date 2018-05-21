@@ -1,31 +1,29 @@
+#!/usr/bin/env python3
+
+"""
+In-Memory Mongo-Flavored Queries.
+
+jque is a Python module that lets you query in-memory lists of dicts as though
+they were in a Mongo database.
+"""
+
 import json
 import copy
 import types
-
-_run_parallel = False
-try:
-    from deco import synchronized, concurrent
-    _run_parallel = True
-except:
-    _run_parallel = False
-    concurrent = lambda x: x
-    synchronized = lambda x: x
-
 
 __version__ = "0.0.1"
 
 
 _OPERATORS = {
-        "$eq": lambda x, y: x == y,
-        "$neq": lambda x, y: x != y,
-        "$lt": lambda x, y: x < y,
-        "$lte": lambda x, y: x <= y,
-        "$gt": lambda x, y: x > y,
-        "$gte": lambda x, y: x >= y,
-        "$in": lambda x, y: y in x,
-        "$nin": lambda x, y: y not in x,
-        # TODO: Add operators as useful.
-    }
+    "$eq": lambda x, y: x == y,
+    "$neq": lambda x, y: x != y,
+    "$lt": lambda x, y: x < y,
+    "$lte": lambda x, y: x <= y,
+    "$gt": lambda x, y: x > y,
+    "$gte": lambda x, y: x >= y,
+    "$in": lambda x, y: y in x,
+    "$nin": lambda x, y: y not in x,
+}
 
 
 def _check_record(qr, record):
@@ -74,7 +72,8 @@ class jque:
             "current_planet": "earth",
             "age": { "$lte": 20, "$gte": 10 }
         })
-        """
+
+    """
 
     OPERATORS = _OPERATORS
 
@@ -102,14 +101,12 @@ class jque:
     def __len__(self):
         return len(self.data)
 
-    def query(self, qr, maintain_order=False, wrap=True):
+    def query(self, qr, wrap=True):
         """
         Query the records for a desired trait.
 
         Arguments:
             qr (dict): a dict where all keys are included in all records.
-            maintain_order (bool : False): If record order is important.
-                Note: prevents parallelism, if available.
             wrap (bool : True): If the result should be rewrapped in a
                 new jque object.
         """
