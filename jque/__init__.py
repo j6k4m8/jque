@@ -28,7 +28,6 @@ _OPERATORS = {
     }
 
 
-@concurrent
 def _check_record(qr, record):
     include = True
     for key, qual in qr.items():
@@ -44,8 +43,8 @@ def _check_record(qr, record):
             if not qual(record[key]):
                 return False
         else:
-            if key != qual:
-                include = False
+            if record[key] != qual:
+                return False
     return include
 
 class jque:
@@ -103,19 +102,7 @@ class jque:
     def __len__(self):
         return len(self.data)
 
-    @synchronized
-    def _sync_query(self, qr):
-        filtered_data = {}
-        for ind, record in enumerate(self.data):
-            filtered_data[ind] = (_check_record(qr, record), record)
-            if include:
-                filtered_data.append(record)
-        return [
-            f[1] for f in filtered_data.values()
-            if f[0]
-        ]
-
-    def query(self, qr, maintain_order=False, parallel=True, wrap=True):
+    def query(self, qr, maintain_order=False, wrap=True):
         """
         Query the records for a desired trait.
 
@@ -123,13 +110,9 @@ class jque:
             qr (dict): a dict where all keys are included in all records.
             maintain_order (bool : False): If record order is important.
                 Note: prevents parallelism, if available.
-            parallel (bool : True): If the operations should be 
-                parallelized, recordwise.
             wrap (bool : True): If the result should be rewrapped in a
                 new jque object.
         """
-        if not maintain_order and _run_parallel and parallel:
-            return self._sync_query(qr)
 
         filtered_data = []
         for record in self.data:
