@@ -100,3 +100,12 @@ class TestJque(unittest.TestCase):
             len(jque.jque(USERS)) - 2
         )
 
+
+    def test_lambda(self):
+        self.assertEquals(
+            len(jque.jque(USERS).query({
+                "id": lambda x: x not in [9, 109, 10]
+            })),
+            len(jque.jque(USERS)) - 3
+        )
+
