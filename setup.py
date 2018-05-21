@@ -1,48 +1,112 @@
-from setuptools import setup, find_packages
-from codecs import open
-from os import path
-from jque import __version__
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
+# Note: To use the 'upload' functionality of this file, you must:
+#   $ pip install twine
 
-here = path.abspath(path.dirname(__file__))
+import io
+import os
+import sys
+from shutil import rmtree
 
-# Get the long description from the README file
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
+from setuptools import find_packages, setup, Command
 
-# get the dependencies and installs
-with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
-    all_reqs = f.read().split('\n')
+# Package meta-data.
+NAME = 'jque'
+DESCRIPTION = 'Query JSON in memory as though it were a Mongo database.'
+URL = 'https://github.com/j6k4m8/jque'
+EMAIL = 'open-source@matelsky.com'
+AUTHOR = 'Jordan Matelsky'
+REQUIRES_PYTHON = '>=3.6.0'
+VERSION = "0.1.0"
 
-install_requires = [x.strip() for x in all_reqs if 'git+' not in x]
-dependency_links = [
-    x.strip().replace('git+', '') for x in all_reqs if x.startswith('git+')
+# What packages are required for this module to be executed?
+REQUIRED = [
+
 ]
 
+# What packages are suggested for doing development?
+DEVELOPING_REQS = [
+    'pytest',
+    'pylint'
+]
+
+here = os.path.abspath(os.path.dirname(__file__))
+
+with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
+    long_description = '\n' + f.read()
+
+about = {}
+about['__version__'] = VERSION
+
+
+class UploadCommand(Command):
+    """Support setup.py upload."""
+
+    description = 'Build and publish the package.'
+    user_options = []
+
+    @staticmethod
+    def status(s):
+        """Prints things in bold."""
+        print('\033[1m{0}\033[0m'.format(s))
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        try:
+            self.status('Removing previous builds…')
+            rmtree(os.path.join(here, 'dist'))
+        except OSError:
+            pass
+
+        self.status('Building Source and Wheel (universal) distribution…')
+        os.system(
+            '{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
+
+        self.status('Uploading the package to PyPi via Twine…')
+        os.system('twine upload dist/*')
+
+        self.status('Pushing git tags…')
+        os.system('git tag v{0}'.format(about['__version__']))
+        os.system('git push --tags')
+
+        sys.exit()
+
+
+# Where the magic happens:
 setup(
-    name='jque',
-    version=__version__,
-    description='Query JSON in memory as though it were a Mongo database.',
+    name=NAME,
+    version=about['__version__'],
+    description=DESCRIPTION,
     long_description=long_description,
-    download_url='https://github.com/j6k4m8/jque/tarball/' + __version__,
-    license='Apache 2.0',
-    classifiers=[
-      'Development Status :: 4 - Beta',
-      'Intended Audience :: Developers',
-      'Programming Language :: Python :: 3.4',
-      'Programming Language :: Python :: 3.5',
-    ],
-    keywords=[
-            "json",
-            "mongo",
-            "mongodb",
-            "query",
-            "ql"
-        ],
-    packages=find_packages(exclude=['docs', 'tests*']),
+    long_description_content_type='text/markdown',
+    author=AUTHOR,
+    author_email=EMAIL,
+    python_requires=REQUIRES_PYTHON,
+    url=URL,
+    packages=find_packages(exclude=('tests',)),
+    scripts=[],
+    install_requires=REQUIRED,
+    extras_require={
+        'dev': DEVELOPING_REQS,
+    },
     include_package_data=True,
-    author='Jordan Matelsky',
-    install_requires=install_requires,
-    dependency_links=dependency_links,
-    author_email='jordan@matelsky.com'
+    license='MIT',
+    classifiers=[
+        # Trove classifiers
+        # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
+    ],
+    # $ setup.py publish support.
+    cmdclass={
+        'upload': UploadCommand,
+    },
 )
