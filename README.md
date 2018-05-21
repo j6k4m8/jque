@@ -1,6 +1,6 @@
 <h2 align=center>j q u e</h2>
 <p align=center>Query JSON in memory as though it were a Mongo database</p>
-<p align=center>CircleCI: <img src="https://circleci.com/gh/j6k4m8/jque.svg?style=svg" /></p>
+<p align=center><a href="https://circleci.com/gh/j6k4m8/jque">CircleCI: <img src="https://circleci.com/gh/j6k4m8/jque.svg?style=svg" /></a></p>
 
 
 ## Usage
