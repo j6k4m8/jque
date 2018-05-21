@@ -1,3 +1,9 @@
+## Installation
+
+```shell
+pip3 install jque
+```
+
 ## Usage
 
 ```python

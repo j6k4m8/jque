@@ -2,6 +2,11 @@
 <p align=center>Query JSON in memory as though it were a Mongo database</p>
 <p align=center><a href="https://circleci.com/gh/j6k4m8/jque">CircleCI: <img src="https://circleci.com/gh/j6k4m8/jque.svg?style=svg" /></a></p>
 
+## Installation
+
+```shell
+pip3 install jque
+```
 
 ## Usage
 
