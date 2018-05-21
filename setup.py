@@ -10,6 +10,7 @@ import sys
 from shutil import rmtree
 
 from setuptools import find_packages, setup, Command
+import jque
 
 # Package meta-data.
 NAME = 'jque'
@@ -18,7 +19,7 @@ URL = 'https://github.com/j6k4m8/jque'
 EMAIL = 'open-source@matelsky.com'
 AUTHOR = 'Jordan Matelsky'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = "0.1.0"
+VERSION = jque.__version__
 
 # What packages are required for this module to be executed?
 REQUIRED = [
