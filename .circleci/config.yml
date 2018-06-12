@@ -30,7 +30,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            pip install -U pipenv
+            pip install pipenv
             pipenv
 
 
