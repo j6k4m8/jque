@@ -10,6 +10,7 @@ name = "pypi"
 pytest = "*"
 deco = "*"
 twine = "*"
+codecov = "*"
 
 
 [dev-packages]
