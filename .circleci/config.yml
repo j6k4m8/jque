@@ -45,6 +45,7 @@ jobs:
       - run:
           name: run tests
           command: |
+            pipenv install .
             pipenv run pytest
             pipenv run codecov
 
