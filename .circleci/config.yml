@@ -23,21 +23,19 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "requirements.txt" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+            - cache-{{ checksum "Pipfile.lock" }}
+            - cache-
 
       - run:
           name: install dependencies
-          command: |
-            pip install pipenv
-            pipenv
+          command: pipenv sync --dev
 
 
       - save_cache:
           paths:
-            - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
+            - ~/.local
+            - ~/.cache
+          key: cache-{{ checksum "Pipfile.lock" }}
 
       # run tests!
       # this example uses Django's built-in test-runner
