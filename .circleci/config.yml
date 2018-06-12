@@ -45,9 +45,8 @@ jobs:
       - run:
           name: run tests
           command: |
-            pipenv install .
-            pipenv run pytest
-            pipenv run codecov
+            pipenv run python -m pytest
+            pipenv run python -m codecov
 
       - store_artifacts:
           path: test-reports
