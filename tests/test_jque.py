@@ -31,19 +31,19 @@ class TestJque(unittest.TestCase):
         self.assertIsNotNone(jque.jque(USERS).data)
 
     def test_basic_filter(self):
-        self.assertEquals(
+        self.assertEqual(
             jque.jque(SMALL).query({"name": {"$eq": "Ford Prefect"}}).data[0]['_id'],
             "123"
         )
 
     def test_literal_filter(self):
-        self.assertEquals(
+        self.assertEqual(
             jque.jque(SMALL).query({"name": "Ford Prefect"}).data[0]['_id'],
             "123"
         )
 
     def test_multi_literal_filter(self):
-        self.assertEquals(
+        self.assertEqual(
             jque.jque(USERS).query({
                 "name": "Glenna Reichert",
                 "username": "Delphine",
@@ -52,7 +52,7 @@ class TestJque(unittest.TestCase):
         )
 
     def test_multi_filter(self):
-        self.assertEquals(
+        self.assertEqual(
             jque.jque(USERS).query({
                 "username": "Delphine",
                 "id": {"$gt": 9}
@@ -61,27 +61,27 @@ class TestJque(unittest.TestCase):
         )
 
     def test_can_index(self):
-        self.assertEquals(
+        self.assertEqual(
             jque.jque(USERS).data[0],
             jque.jque(USERS)[0]
         )
 
 
     def test_length(self):
-        self.assertEquals(
+        self.assertEqual(
             len(jque.jque(USERS).data),
             len(jque.jque(USERS))
         )
 
 
     def test_accepts_filename(self):
-        self.assertEquals(
+        self.assertEqual(
             len(jque.jque(os.path.dirname(__file__) + "/data/users.json").data),
             len(jque.jque(USERS).data)
         )
 
     def test_list_in(self):
-        self.assertEquals(
+        self.assertEqual(
             len(jque.jque(USERS).query({
                 "id": {
                     "$in": [9, 109]
@@ -91,7 +91,7 @@ class TestJque(unittest.TestCase):
         )
 
     def test_list_nin(self):
-        self.assertEquals(
+        self.assertEqual(
             len(jque.jque(USERS).query({
                 "id": {
                     "$nin": [9, 109]
@@ -102,7 +102,7 @@ class TestJque(unittest.TestCase):
 
 
     def test_lambda(self):
-        self.assertEquals(
+        self.assertEqual(
             len(jque.jque(USERS).query({
                 "id": lambda x: x not in [9, 109, 10]
             })),
@@ -127,9 +127,9 @@ class TestJque(unittest.TestCase):
              "age": 240,
              "current_planet": "Brontitall"
         }])
-        self.assertEquals(
+        self.assertEqual(
             len(data.query({"current_planet": "earth"})), 2
         )
-        self.assertEquals(
+        self.assertEqual(
             len(data.query({"current_planet": "earth"}, limit=1)), 1
         )

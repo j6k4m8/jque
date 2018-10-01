@@ -8,8 +8,8 @@ jobs:
     docker:
       # specify the version you desire here
       # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
-      - image: circleci/python:3.6.1
-      
+      - image: circleci/python:3.6.4
+
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
@@ -23,22 +23,20 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "requirements.txt" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+            - cache-{{ checksum "Pipfile.lock" }}
+            - cache-
 
       - run:
           name: install dependencies
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
+          command: pipenv sync --dev
+
 
       - save_cache:
           paths:
-            - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
-        
+            - ~/.local
+            - ~/.cache
+          key: cache-{{ checksum "Pipfile.lock" }}
+
       # run tests!
       # this example uses Django's built-in test-runner
       # other common Python testing frameworks include pytest and nose
@@ -47,10 +45,12 @@ jobs:
       - run:
           name: run tests
           command: |
-            . venv/bin/activate
-            pytest
+            pipenv run pip3 install -U .
+            pipenv run python -m pytest --cov="jque"
+            pipenv run python -m coverage run ./tests/test_jque.py
+            pipenv run python -m codecov
 
       - store_artifacts:
           path: test-reports
           destination: test-reports
-          
+
