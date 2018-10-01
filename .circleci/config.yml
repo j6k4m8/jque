@@ -45,8 +45,9 @@ jobs:
       - run:
           name: run tests
           command: |
-            pipenv run python -m pytest
-            pipenv run python -m coverage run ./tests/test_jque.py && codecov
+            pipenv run python -m pytest --cov="jque"
+            pipenv run python -m coverage run ./tests/test_jque.py
+            pipenv run python -m codecov
 
       - store_artifacts:
           path: test-reports
