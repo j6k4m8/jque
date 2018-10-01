@@ -109,3 +109,27 @@ class TestJque(unittest.TestCase):
             len(jque.jque(USERS)) - 3
         )
 
+
+    def test_limit(self):
+        data = jque.jque([{
+             "_id": "ABC",
+             "name": "Arthur Dent",
+             "age": 42,
+             "current_planet": "earth"
+        }, {
+             "_id": "DE2",
+             "name": "Penny Lane",
+             "age": 19,
+             "current_planet": "earth"
+        }, {
+             "_id": "123",
+             "name": "Ford Prefect",
+             "age": 240,
+             "current_planet": "Brontitall"
+        }])
+        self.assertEquals(
+            len(data.query({"current_planet": "earth"})), 2
+        )
+        self.assertEquals(
+            len(data.query({"current_planet": "earth"}, limit=1)), 1
+        )

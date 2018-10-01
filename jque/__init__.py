@@ -101,7 +101,7 @@ class jque:
     def __len__(self):
         return len(self.data)
 
-    def query(self, qr, wrap=True):
+    def query(self, qr, wrap=True, limit=None):
         """
         Query the records for a desired trait.
 
@@ -109,6 +109,29 @@ class jque:
             qr (dict): a dict where all keys are included in all records.
             wrap (bool : True): If the result should be rewrapped in a
                 new jque object.
+
+        Examples:
+
+        >>> data = jque([{
+        ...     "_id": "ABC",
+        ...     "name": "Arthur Dent",
+        ...     "age": 42,
+        ...     "current_planet": "earth"
+        ... }, {
+        ...     "_id": "DE2",
+        ...     "name": "Penny Lane",
+        ...     "age": 19,
+        ...     "current_planet": "earth"
+        ... }, {
+        ...     "_id": "123",
+        ...     "name": "Ford Prefect",
+        ...     "age": 240,
+        ...     "current_planet": "Brontitall"
+        ... }])
+        >>> len(data.query({ current_planet: "earth" })) == 2
+        True
+        >>> len(data.query({ current_planet: "earth" }), limit=1) == 1
+        True
         """
 
         filtered_data = []
@@ -116,6 +139,8 @@ class jque:
             include = _check_record(qr, record)
             if include:
                 filtered_data.append(record)
+                if limit and len(filtered_data) >= limit:
+                    break
         if wrap:
             return jque(filtered_data)
         return filtered_data
