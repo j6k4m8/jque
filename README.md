@@ -20,7 +20,12 @@ import jque
 
 Pass a list of dicts:
 ```python
-data = jque.jque([{ "name": "jque" }])
+data = jque.jque([
+    { "name": "john" }, 
+    { "name": "paul" }, 
+    { "name": "george" }, 
+    { "name": "ringo" }
+])
 ```
 
 Pass a JSON filename:
@@ -30,8 +35,14 @@ data = jque.jque(DATAFILE)
 ```
 
 Now you can query this dataset using Mongo-like syntax:
+
 ```python
-data.query({ "name": {"$neq": "numpy"} })
+>>> data.query({ "name": {"$neq": "paul"} })
+[
+    { "name": "john" },
+    { "name": "george" }, 
+    { "name": "ringo" }
+]
 ```
 
 ### Arguments to `query`:
@@ -40,8 +51,8 @@ data.query({ "name": {"$neq": "numpy"} })
 |-----|-------------|
 | `wrap` (`boolean` : `True`) | Whether to wrap the resultant dataset in a new `jque` object. This allows chaining, like `jque.query(...).query(...)`, if you're the sort of person to do that. Pass `False` to get back a `list` instead. |
 
-### 
 
+### Another example!
 
 ```python
 data = jque.jque([{
@@ -60,18 +71,37 @@ data = jque.jque([{
     "age": 240,
     "current_planet": "Brontitall"
 }])
+```
 
+```python
 teenage_earthlings = data.query({
     "current_planet": {"$eq": "earth"},
     "age": { "$lte": 20, "$gte": 10 }
 })
 ```
 
+Which returns:
+
+```python
+[{
+    "_id": "DE2",
+    "name": "Penny Lane",
+    "age": 19,
+    "current_planet": "earth"
+}]
+```
+
 
 Use Python lambdas as a filter:
 
 ```python
-libraries = jque.jque([{"name": "jque", "language": "Python"}, {"name": "react", "language": "node"}])
-list(libraries.query({ 'language': lambda x: x[:2] == "Py" }))
+>>> libraries = jque.jque([
+...     {"name": "jque", "language": "Python"}, 
+...     {"name": "react", "language": "node"}
+... ])
+>>> list(libraries.query({
+...     'language': lambda x: x[:2] == "Py"
+... }))
+[{"name": "jque", "language": "Python"}]
 ```
 
