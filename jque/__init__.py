@@ -6,10 +6,12 @@ In-Memory Mongo-Flavored Queries.
 jque is a Python module that lets you query in-memory lists of dicts as though
 they were in a Mongo database.
 """
+from typing import List
 
 import json
 import copy
 import types
+from deco import synchronized, concurrent
 
 __version__ = "0.1.2"
 
@@ -26,8 +28,12 @@ _OPERATORS = {
 }
 
 
+@concurrent
+def _check_record_parallel(qr, record):
+    return _check_record(qr, record)
+
+
 def _check_record(qr, record):
-    include = True
     for key, qual in qr.items():
         if isinstance(qual, dict):
             for op, val in qual.items():
@@ -43,7 +49,8 @@ def _check_record(qr, record):
         else:
             if record[key] != qual:
                 return False
-    return include
+    return True
+
 
 class jque:
     """
@@ -77,7 +84,7 @@ class jque:
 
     OPERATORS = _OPERATORS
 
-    def __init__(self, data):
+    def __init__(self, data, parallel=False):
         """
         Create a new jque object. Pass `data`, which must be a
         string or a list. If a list, each item should be a dictionary.
@@ -85,6 +92,7 @@ class jque:
         json.dumps or JS's JSON.stringify) or a filename that points
         to a .json file on disk.
         """
+        self.parallel = parallel
         if isinstance(data, str):
             try:
                 data = json.loads(data)
@@ -134,6 +142,16 @@ class jque:
         True
         """
 
+        if self.parallel:
+            # TODO: Concurrent support for limits
+            results = _parallel_query(qr, self.data)
+            filtered_results = [
+                d for d, r in zip(self.data, results) if r
+            ][:limit]
+            if wrap:
+                return jque(filtered_results)
+            return filtered_results
+
         filtered_data = []
         for record in self.data:
             include = _check_record(qr, record)
@@ -144,3 +162,11 @@ class jque:
         if wrap:
             return jque(filtered_data)
         return filtered_data
+
+
+@synchronized
+def _parallel_query(qr, data) -> List[bool]:
+    results = [False] * len(data)
+    for i in range(len(data)):
+        results[i] = _check_record(qr, data[i])
+    return results

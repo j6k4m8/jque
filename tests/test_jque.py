@@ -32,7 +32,8 @@ class TestJque(unittest.TestCase):
 
     def test_basic_filter(self):
         self.assertEqual(
-            jque.jque(SMALL).query({"name": {"$eq": "Ford Prefect"}}).data[0]['_id'],
+            jque.jque(SMALL).query(
+                {"name": {"$eq": "Ford Prefect"}})[0]['_id'],
             "123"
         )
 
@@ -66,13 +67,11 @@ class TestJque(unittest.TestCase):
             jque.jque(USERS)[0]
         )
 
-
     def test_length(self):
         self.assertEqual(
             len(jque.jque(USERS).data),
             len(jque.jque(USERS))
         )
-
 
     def test_accepts_filename(self):
         self.assertEqual(
@@ -100,7 +99,6 @@ class TestJque(unittest.TestCase):
             len(jque.jque(USERS)) - 2
         )
 
-
     def test_lambda(self):
         self.assertEqual(
             len(jque.jque(USERS).query({
@@ -109,24 +107,23 @@ class TestJque(unittest.TestCase):
             len(jque.jque(USERS)) - 3
         )
 
-
     def test_limit(self):
         data = jque.jque([{
-             "_id": "ABC",
-             "name": "Arthur Dent",
-             "age": 42,
-             "current_planet": "earth"
+            "_id": "ABC",
+            "name": "Arthur Dent",
+            "age": 42,
+            "current_planet": "earth"
         }, {
-             "_id": "DE2",
-             "name": "Penny Lane",
-             "age": 19,
-             "current_planet": "earth"
+            "_id": "DE2",
+            "name": "Penny Lane",
+            "age": 19,
+            "current_planet": "earth"
         }, {
-             "_id": "123",
-             "name": "Ford Prefect",
-             "age": 240,
-             "current_planet": "Brontitall"
-        }])
+            "_id": "123",
+            "name": "Ford Prefect",
+            "age": 240,
+            "current_planet": "Brontitall"
+        }], parallel=True)
         self.assertEqual(
             len(data.query({"current_planet": "earth"})), 2
         )
