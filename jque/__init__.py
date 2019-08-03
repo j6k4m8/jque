@@ -13,7 +13,7 @@ import copy
 import types
 from deco import synchronized, concurrent
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 
 _OPERATORS = {

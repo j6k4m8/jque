@@ -10,20 +10,19 @@ import sys
 from shutil import rmtree
 
 from setuptools import find_packages, setup, Command
-import jque
 
 # Package meta-data.
 NAME = 'jque'
 DESCRIPTION = 'Query JSON in memory as though it were a Mongo database.'
 URL = 'https://github.com/j6k4m8/jque'
-EMAIL = 'open-source@matelsky.com'
+EMAIL = 'opensource@matelsky.com'
 AUTHOR = 'Jordan Matelsky'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = jque.__version__
+VERSION = '0.1.3'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-
+    'deco'
 ]
 
 # What packages are suggested for doing development?
