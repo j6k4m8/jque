@@ -121,9 +121,7 @@ class jque:
         self.data = data
 
         self._iter_items = (
-            lambda x: [v for _, v in x.iterrows()]
-            if self._is_pandas
-            else lambda x: list(x)
+            [v for _, v in self.data.iterrows()] if self._is_pandas else self.data
         )
 
     def __getitem__(self, key):
@@ -174,7 +172,7 @@ class jque:
             return filtered_results
 
         filtered_data = []
-        for record in self._iter_items(self.data):
+        for record in self._iter_items:
             include = _check_record(qr, record)
             if include:
                 filtered_data.append(record)
