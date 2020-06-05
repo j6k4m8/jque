@@ -121,7 +121,9 @@ class jque:
         self.data = data
 
         self._iter_items = (
-            lambda x: [v for _, v in x.iterrows()] if self._is_pandas else list
+            lambda x: [v for _, v in x.iterrows()]
+            if self._is_pandas
+            else lambda x: list(x)
         )
 
     def __getitem__(self, key):
