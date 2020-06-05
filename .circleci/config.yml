@@ -40,7 +40,7 @@ jobs:
                   name: run tests
                   command: |
                       pip3 install -U .
-                      python -m pytest --cov="jque"
+                      python -m pytest
                       python -m coverage run ./tests/test_jque.py
                       python -m codecov
 
