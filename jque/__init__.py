@@ -11,9 +11,24 @@ from typing import List
 import json
 import copy
 import types
-from deco import synchronized, concurrent
 
-__version__ = "0.1.3"
+try:
+    from deco import synchronized, concurrent
+
+    _DECO_SUPPORTED = True
+except ImportError:
+    concurrent = lambda x: x
+    synchronized = lambda x: x
+    _DECO_SUPPORTED = False
+
+try:
+    import pandas as pd
+
+    _PANDAS_SUPPORTED = True
+except ImportError:
+    _PANDAS_SUPPORTED = False
+
+__version__ = "0.2.0"
 
 
 _OPERATORS = {
@@ -38,9 +53,7 @@ def _check_record(qr, record):
         if isinstance(qual, dict):
             for op, val in qual.items():
                 if op not in _OPERATORS:
-                    raise ValueError(
-                        "'{}' is not a valid operator.".format(op)
-                    )
+                    raise ValueError("'{}' is not a valid operator.".format(op))
                 if not _OPERATORS[op](record[key], val):
                     return False
         elif isinstance(qual, types.FunctionType):
@@ -93,15 +106,23 @@ class jque:
         to a .json file on disk.
         """
         self.parallel = parallel
+        self._is_pandas = False
         if isinstance(data, str):
             try:
                 data = json.loads(data)
             except ValueError:
-                data = json.loads(open(data, 'r').read())
+                data = json.loads(open(data, "r").read())
+        elif _PANDAS_SUPPORTED and isinstance(data, pd.DataFrame):
+            self._is_pandas = True
         elif not isinstance(data, list):
-            raise ValueError("'data' argument must be a string or a list.")
-
+            raise ValueError(
+                "'data' argument must be a string, pandas.DataFrame, or a list[dict]."
+            )
         self.data = data
+
+        self._iter_items = (
+            lambda x: [v for _, v in x.iterrows()] if self._is_pandas else list
+        )
 
     def __getitem__(self, key):
         return self.data[key]
@@ -145,15 +166,13 @@ class jque:
         if self.parallel:
             # TODO: Concurrent support for limits
             results = _parallel_query(qr, self.data)
-            filtered_results = [
-                d for d, r in zip(self.data, results) if r
-            ][:limit]
+            filtered_results = [d for d, r in zip(self.data, results) if r][:limit]
             if wrap:
                 return jque(filtered_results)
             return filtered_results
 
         filtered_data = []
-        for record in self.data:
+        for record in self._iter_items(self.data):
             include = _check_record(qr, record)
             if include:
                 filtered_data.append(record)
