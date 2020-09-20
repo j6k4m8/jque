@@ -1,7 +1,8 @@
 <h2 align=center>j q u e</h2>
 <p align=center>Query JSON in memory as though it were a Mongo database</p>
-<p align=center><a href="https://pypi.org/project/jque/"><img src="https://img.shields.io/pypi/v/jque.svg" /></a> <a href="https://circleci.com/gh/j6k4m8/jque"><img src="https://img.shields.io/circleci/project/github/RedSparr0w/node-csgo-parser.svg" /></a> <img src="https://img.shields.io/badge/extremely_rad-%F0%9F%A4%99-blue.svg" /> <img src="https://img.shields.io/github/license/j6k4m8/jque.svg" /><a href="https://codecov.io/gh/j6k4m8/jque">
-  <img src="https://codecov.io/gh/j6k4m8/jque/branch/master/graph/badge.svg" />
+<p align=center><a href="https://pypi.org/project/jque/"><img src="https://img.shields.io/pypi/v/jque.svg?style=for-the-badge" /></a> <a href="https://circleci.com/gh/j6k4m8/jque"><img src="https://img.shields.io/circleci/project/github/RedSparr0w/node-csgo-parser.svg?style=for-the-badge" /></a> <img src="https://img.shields.io/badge/pretty_dope-%F0%9F%A4%99-blue.svg?style=for-the-badge" /> <img src="https://img.shields.io/github/license/j6k4m8/jque.svg?style=for-the-badge" /><a href="https://codecov.io/gh/j6k4m8/jque">
+  <br />
+  <img src="https://codecov.io/gh/j6k4m8/jque/branch/master/graph/badge.svg?style=for-the-badge" />
 </a></p>
 
 ## Installation
