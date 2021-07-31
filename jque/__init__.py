@@ -6,20 +6,10 @@ In-Memory Mongo-Flavored Queries.
 jque is a Python module that lets you query in-memory lists of dicts as though
 they were in a Mongo database.
 """
-from typing import List
+from typing import List, Union
 
 import json
-import copy
 import types
-
-try:
-    from deco import synchronized, concurrent
-
-    _DECO_SUPPORTED = True
-except ImportError:
-    concurrent = lambda x: x
-    synchronized = lambda x: x
-    _DECO_SUPPORTED = False
 
 try:
     import pandas as pd
@@ -41,11 +31,6 @@ _OPERATORS = {
     "$in": lambda x, y: x in y,
     "$nin": lambda x, y: x not in y,
 }
-
-
-@concurrent
-def _check_record_parallel(qr, record):
-    return _check_record(qr, record)
 
 
 def _check_record(qr, record):
@@ -97,13 +82,26 @@ class jque:
 
     OPERATORS = _OPERATORS
 
-    def __init__(self, data, parallel=False):
+    def __init__(self, data: Union[str, list, "pd.DataFrame"], parallel=False):
         """
         Create a new jque object. Pass `data`, which must be a
         string or a list. If a list, each item should be a dictionary.
         If a string, it can either be a JSON string (from Python's
         json.dumps or JS's JSON.stringify) or a filename that points
         to a .json file on disk.
+
+        Arguments:
+            data (str, list, pd.DataFrame): The data to be queried.
+            parallel (bool : False): If True, the query will be parallelized.
+
+        Examples:
+
+            >>> data = jque(['{"_id": "ABC", "name": "Arthur Dent", "age": 42}',
+            ...             '{"_id": "DE2", "name": "Penny Lane", "age": 19}',
+            ...             '{"_id": "123", "name": "Ford Prefect", "age": 240}'])
+            >>> data.query({ name: "Arthur Dent" })
+            [{'_id': 'ABC', 'name': 'Arthur Dent', 'age': 42}]
+
         """
         self.parallel = parallel
         self._is_pandas = False
@@ -161,16 +159,8 @@ class jque:
         True
         >>> len(data.query({ current_planet: "earth" }), limit=1) == 1
         True
+
         """
-
-        if self.parallel:
-            # TODO: Concurrent support for limits
-            results = _parallel_query(qr, self.data)
-            filtered_results = [d for d, r in zip(self.data, results) if r][:limit]
-            if wrap:
-                return jque(filtered_results)
-            return filtered_results
-
         filtered_data = []
         for record in self._iter_items:
             include = _check_record(qr, record)
@@ -181,11 +171,3 @@ class jque:
         if wrap:
             return jque(filtered_data)
         return filtered_data
-
-
-@synchronized
-def _parallel_query(qr, data) -> List[bool]:
-    results = [False] * len(data)
-    for i in range(len(data)):
-        results[i] = _check_record(qr, data[i])
-    return results
